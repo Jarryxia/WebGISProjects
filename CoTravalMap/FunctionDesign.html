@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>功能展示</title>
+
+        <link href="CSS/FunctionDesign.css" rel="stylesheet" type="text/css"/>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+              integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">-->
+    </head>
+    <body>
+        <header>
+            <h1>欢迎使用携行地图</h1>
+        </header>
+
+        <nav>
+            <ul class="topnav" id="dropdownClick">
+                <li><a href="index.html">携行地图</a></li>
+                <li><a href="FunctionDesign.html">功能设计</a></li>
+                <li><a href="MapIntro.html">地图简介</a></li>
+                <li><a href="MapAuthor.html">地图作者</a></li>
+
+                <li class="topnav-right"><a href="logon.html">注册</a></li>
+                <li class="topnav-right"><a href="login.html">登陆</a></li>
+            </ul>
+        </nav>
+
+        <div class="section">
+            <h1><span>标记点</span></h1>
+            <p>
+                首先，在“点名称”输入框中输入标记点的名称，在“点备注”中输入标记点的说明描述等，而后点击标注点，可在地图上相应位置添加点标记，
+                之后可点击该标记查看该点属性。需要注意的是，每点击“标注点”按钮一次，仅能添加一个标注点。此外，还可以点击“清除点”按钮来清除
+                所有的标记点，在清除所有点后，如果再一次点击了“标注点”按钮，点标记的id又会从1开始。
+            </p>
+        </div>
+        <br>
+        <div class="imgPosition">
+            <img src="image/point.png" alt="LabelPoint"  width="800" height="450" >
+        </div>
+        <br>
+        <div class="section">
+            <h1><span>标记线</span></h1>
+            <p>
+                首先，在“线名称”输入框中输入标记线的名称，在“线备注”中输入标记线的说明描述等，而后点击右上角中工具栏的第二个图标——“画折线”，
+                即可在地图上相应位置添加线标记，双击鼠标左键即可结束绘制。之后可点击该标记查看该折线属性。此外，还可以点击“清除线”按钮来清除所
+                有的标记线,在清除所有线后，如果再一次点击了“画折线”图标，线标记的id又会从1开始。
+            </p>
+        </div>
+
+        <br>
+        <div class="imgPosition">
+            <img src="image/polyline.png" alt="LabelLine"  width="800" height="400">
+        </div>
+        <br>
+
+        <div class="section">
+            <h1><span>标记多边形</span></h1>
+            <p>
+                首先，在“多边形名称”输入框中输入标记多边形的名称，在“多边形备注”中输入标记多边形的说明描述等，而后点击右上角中工具栏的第三个
+                图标——“画多边形”，即可在地图上相应位置添加多边形标记，双击鼠标左键即可结束绘制。之后可点击该标记查看该多边形属性。
+                此外，还可以点击“清除多边形”按钮来清除所有的标记多边形，在清除所有多边形后，如果再一次点击了“画折线”图标，线标记的id又会从1开始。
+            </p>
+        </div>
+
+        <br>
+        <div class="imgPosition">
+            <img src="image/polygon.png" alt="LabelPolygon"  width="800" height="400">
+        </div>
+        <br>
+
+        <div class="section">
+            <h1><span>测距</span></h1>
+            <p>
+                点击“测距”，即可自行绘制折线，且相邻两点的距离会在后一个点附近显示。双击鼠标左键，结束测距，此时最后一个点的附近会显示总距离。
+            </p>
+        </div>
+
+        <br>
+        <div class="imgPosition">
+            <img src="image/Measure.png" alt="GetDistance"  width="800" height="400">
+        </div>
+        <br>
+
+        <div class="section">
+            <h1><span>路线规划</span></h1>
+            <p>
+                输入出发地“中南大学新校区”和目的地“湖师大”，可在地图中得到从出发地到目的地的最优路径.
+            </p>
+        </div>
+
+        <br>
+        <div class="imgPosition">
+            <img src="image/routePlan.png" alt="Routing"  width="800" height="400">
+        </div>
+        <br>
+
+    </body>
+</html>

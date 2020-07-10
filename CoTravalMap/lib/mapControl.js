@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var count_point = 1;
+var count_line = 1;
+var count_polygon = 1;
+
 MapControl = function (options) {
     var me = this;
     me.options = $.extend({
     }, options);
 
     me._init();
+
 };
 
 MapControl.prototype._init = function () {
@@ -23,12 +28,7 @@ MapControl.prototype._init = function () {
     });
     console.log(document.getElementById(me.bdmapID));
 
-//    me._timer = setInterval(function () {
-//        me._initBackgroundMap();
-//    }, 1000);
 
-    //me.bdmap = new BMap.Map(me.div);
-    //enableMapClick:false 设置景点不可点，默认为true，点击景点时，弹出景点详情
     me.bdmap = new BMap.Map("viewDiv", {enableMapClick: false});
     //初始化地图，设置坐标点在哪
     me.bdmap.centerAndZoom(new BMap.Point(113.000139, 28.160198), 10);
@@ -49,9 +49,43 @@ MapControl.prototype._init = function () {
     me.localSearch = new BMap.LocalSearch(me.bdmap);
     me.localSearch.enableAutoViewport(); //允许自动调节窗体大小
 
-    // me._addDrawInteractions();
-    //me._drawFeature();
+    me.overlays = [];
+    var overlaycomplete = function (e) {
+        me.overlays.push(e.overlay);
+    };
+    me.styleOptions = {
+        strokeColor: "red", //边线颜色。
+        fillColor: "yellow", //填充颜色。当参数为空时，圆形将没有填充效果。
+        strokeWeight: 3, //边线的宽度，以像素为单位。
+        strokeOpacity: 0.8, //边线透明度，取值范围0 - 1。
+        fillOpacity: 0.6, //填充的透明度，取值范围0 - 1。
+        strokeStyle: 'solid' //边线的样式，solid或dashed。
+    };
+    //实例化鼠标绘制工具
+    var drawingManager = new BMapLib.DrawingManager(me.bdmap, {
+        isOpen: false, //是否开启绘制模式
+        enableDrawingTool: true, //是否显示工具栏
+        drawingToolOptions: {
+            anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+            offset: new BMap.Size(10, 40), //偏离值
+            drawingModes: [BMAP_DRAWING_POLYLINE, BMAP_DRAWING_POLYGON], //设置只显示画矩形、圆的模式
+        },
+        circleOptions: me.styleOptions, //圆的样式
+        polylineOptions: me.styleOptions, //线的样式
+        polygonOptions: me.styleOptions, //多边形的样式
+        rectangleOptions: me.styleOptions //矩形的样式
+    });
+    //添加鼠标绘制工具监听事件，用于获取绘制结果
+    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+    drawingManager.addEventListener('polylinecomplete', function (overlay) {
+        me.polylinecomplete(overlay);
+    });
+    drawingManager.addEventListener('polygoncomplete', function (overlay) {
+        me.polygoncomplete(overlay);
+    });
+
 };
+
 
 MapControl.prototype._hideCopyrights = function () {
     var me = this;
@@ -71,41 +105,125 @@ MapControl.prototype._measureDistance = function () {
         console.log("2");
         //myDis.close();  //关闭鼠标测距
     });
-////自定义样式
-//    var customStyle = {
-//        "borderColor": "#20A0E4", //标点之间连线颜色
-//        "redMarkerSrc": "./images/red_marker.png", //已提交的标点样式
-//        "blueMarkerSrc": "./images/blue_marker.png" //本次待提交的标点样式
-//    };
-//
-//    //地图测距功能初始化
-//    var opts = {
-//        "followText": "单击确定标点，双击结束标点",
-//        "lineColor": "#20A0E4",
-//        "secIcon": new BMap.Icon(customStyle.blueMarkerSrc, new BMap.Size(21, 35)),
-//    };
 };
 MapControl.prototype._addPoint = function () {
     var me = this;
-    var i = 1;
-    me.bdmap.addEventListener("click", function (e) {
+
+    function addInfo(e) {
         me.point = new BMap.Point(e.point.lng, e.point.lat);
-        me.point.id = i;
-        me.point.name = "test" + i;
-        me.point.info = "用于测试";
+        me.point.id = count_point;
+
+        me.point.name = $("#pointName").val();
+        me.point.info = $("#pointInfo").val();
         me._addMarker(me.point);
-        i++;
-    });
+        count_point++;
+        me.bdmap.removeEventListener("click", addInfo);
+    }
+    me.bdmap.addEventListener("click", addInfo);
 };
+
+MapControl.prototype.polylinecomplete = function (overlay) {
+    var me = this;
+    me.line = overlay;
+    me.line.id = count_line;
+    me.line.name = $("#lineName").val();
+    me.line.info = $("#lineInfo").val();
+
+    me.line.addEventListener("click",
+            function (e) {
+
+                var myline = me.line;
+
+                me.sContent =
+                        '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
+                        + '<li style="line-height: 26px;font-size: 15px;">'
+                        + '<span style="width: 50px;display: inline-block;">id：</span>' + myline.id + '</li>'
+                        + '<li style="line-height: 26px;font-size: 15px;">'
+                        + '<span style="width: 50px;display: inline-block;">名称：</span>' + myline.name + '</li>'
+                        + '<span style="width: 50px;display: inline-block;">备注：</span>' + myline.info + '</li>'
+                        + '</ul>';
+                me.infoWindowLine = new BMap.InfoWindow(me.sContent); //创建信息窗口对象
+                me.bdmap.openInfoWindow(me.infoWindowLine, e.point);
+            });
+
+    count_line++;
+};
+
+MapControl.prototype.polygoncomplete = function (overlay) {
+    var me = this;
+    me.polygon = overlay;
+    me.polygon.id = count_polygon;
+    me.polygon.name = $("#polygonName").val();
+    me.polygon.info = $("#polygonInfo").val();
+
+    me.polygon.addEventListener("click",
+            function (e) {
+
+                var mypolygon = me.polygon;
+
+                me.sContent =
+                        '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
+                        + '<li style="line-height: 26px;font-size: 15px;">'
+                        + '<span style="width: 50px;display: inline-block;">id：</span>' + mypolygon.id + '</li>'
+                        + '<li style="line-height: 26px;font-size: 15px;">'
+                        + '<span style="width: 50px;display: inline-block;">名称：</span>' + mypolygon.name + '</li>'
+                        + '<span style="width: 50px;display: inline-block;">备注：</span>' + mypolygon.info + '</li>'
+                        + '</ul>';
+                me.infoWindowLine = new BMap.InfoWindow(me.sContent); //创建信息窗口对象
+                me.bdmap.openInfoWindow(me.infoWindowLine, e.point);
+            });
+
+    count_polygon++;
+};
+
+
+
 
 
 //创建标注点并添加到地图中
 MapControl.prototype._addMarker = function (pt) {
     //循环建立标注点
     var me = this;
+    if (count_point === 1) {
+        var myIcon = new BMap.Icon("image/pic1.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 2) {
+        var myIcon = new BMap.Icon("image/pic2.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 3) {
+        var myIcon = new BMap.Icon("image/pic3.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 4) {
+        var myIcon = new BMap.Icon("image/pic4.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 5) {
+        var myIcon = new BMap.Icon("image/pic5.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 6) {
+        var myIcon = new BMap.Icon("image/pic6.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 7) {
+        var myIcon = new BMap.Icon("image/pic7.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 8) {
+        var myIcon = new BMap.Icon("image/pic8.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    } else if (count_point === 9) {
+        var myIcon = new BMap.Icon("image/pic9.png", new BMap.Size(23, 25), {
+            anchor: new BMap.Size(10, 30)//这句表示图片相对于所加的点的位置
+        });
+    }
 
     var point = new BMap.Point(pt.lng, pt.lat); //将标注点转化成地图上的点
-    var marker = new BMap.Marker(point); //将点转化成标注点
+    var marker = new BMap.Marker(point, {icon: myIcon}); //将点转化成标注点
 
     me.bdmap.addOverlay(marker);  //将标注点添加到地图上
     //添加监听事件
@@ -113,13 +231,28 @@ MapControl.prototype._addMarker = function (pt) {
         var thePoint = pt;
         marker.addEventListener("click",
                 function () {
-                    me._showInfo(this, thePoint);
+                    me._showInfoPoint(this, thePoint);
                 });
     })();
 
-}
+};
 
-MapControl.prototype._showInfo = function (thisMarker, point) {
+MapControl.prototype._showInfoLine = function (thisMarker, line) {
+    //获取点的信息
+    var me = this;
+    me.sContent =
+            '<ul style="margin:0 0 5px 0;padding:0.2em 0">'
+            + '<li style="line-height: 26px;font-size: 15px;">'
+            + '<span style="width: 50px;display: inline-block;">id：</span>' + line.id + '</li>'
+            + '<li style="line-height: 26px;font-size: 15px;">'
+            + '<span style="width: 50px;display: inline-block;">名称：</span>' + line.name + '</li>'
+            + '<span style="width: 50px;display: inline-block;">备注：</span>' + line.info + '</li>'
+            + '</ul>';
+    me.infoWindowLine = new BMap.InfoWindow(me.sContent); //创建信息窗口对象
+    thisMarker.openInfoWindow(me.infoWindowLine); //图片加载完后重绘infoWindow
+};
+
+MapControl.prototype._showInfoPoint = function (thisMarker, point) {
     //获取点的信息
     var me = this;
     me.sContent =
@@ -132,41 +265,50 @@ MapControl.prototype._showInfo = function (thisMarker, point) {
             + '</ul>';
     me.infoWindow = new BMap.InfoWindow(me.sContent); //创建信息窗口对象
     thisMarker.openInfoWindow(me.infoWindow); //图片加载完后重绘infoWindow
-}
+};
+
 
 MapControl.prototype._getpath = function () {
     var me = this;
     var startAddrr = document.getElementById("startAddress").value;//获得起点地名
-    var localSearch = new BMap.LocalSearch(me.bdmap);
-    localSearch.setSearchCompleteCallback(function (searchResult) {
-        var poi = searchResult.getPoi(0);//获得起点经纬度坐标
-        if (poi != null) { //判断地名是否存在
-            //console.log('from poi', poi);
-            me.from = poi.point;
-           // console.log('from', me.from);
-            me._searchByStationName();
-        } else {
-            alert("请输入正确的地名！")
-        }
-    });
-    localSearch.search(startAddrr);
+    if (startAddrr === "") {
+        alert("请输入出发地！");
+        me._searchByStationName();
+    } else {
+        var localSearch = new BMap.LocalSearch(me.bdmap);
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0);//获得起点经纬度坐标
+            if (poi !== null) { //判断地名是否存在
+                //console.log('from poi', poi);
+                me.from = poi.point;
+                // console.log('from', me.from);
+                me._searchByStationName();
+            } else {
+                alert("请输入正确的地名！");
+            }
+        });
+        localSearch.search(startAddrr);
+    }
 };
 
 MapControl.prototype._searchByStationName = function () {
     var me = this;
     var endAddrr = document.getElementById("endAddress").value; //获得目的地地名
     var localSearch = new BMap.LocalSearch(me.bdmap);
-    localSearch.setSearchCompleteCallback(function (searchResult) {
-        var poi = searchResult.getPoi(0); //获得目的地经纬度坐标
-        if (poi != null) { //判断目的地是否存在
-            me.to = poi.point;
-            me._run();
-        } else {
-            alert("请输入正确的地名！")
-        }
-    });
-    localSearch.search(endAddrr);
-   
+    if (endAddrr === "") {
+        alert("请输入目的地！");
+    } else {
+        localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0); //获得目的地经纬度坐标
+            if (poi !== null) { //判断目的地是否存在
+                me.to = poi.point;
+                me._run();
+            } else {
+                alert("请输入正确的地名！");
+            }
+        });
+        localSearch.search(endAddrr);
+    }
 };
 
 MapControl.prototype._run = function () {
@@ -175,7 +317,7 @@ MapControl.prototype._run = function () {
     me.bdmap.clearOverlays(); // 清除地图上所有的覆盖物
     var walking = new BMap.WalkingRoute(me.bdmap); // 创建步行实例
     walking.search(me.from, me.to); // 第一个步行搜索
-    
+
     let that = this;
     walking.setSearchCompleteCallback(function () {
         console.log('completeCallback start!');
@@ -201,53 +343,50 @@ MapControl.prototype._run = function () {
 };
 
 
-
-
-
-
-
-MapControl.prototype._drawFeature = function () {
+MapControl.prototype.clearPoint = function () {
     var me = this;
 
-    me.overlays = [];
-    var overlaycomplete = function (e) {
-        me.overlays.push(e.overlay);
-    };
-    var styleOptions = {
-        strokeColor: "red", //边线颜色。
-        fillColor: "red", //填充颜色。当参数为空时，圆形将没有填充效果。
-        strokeWeight: 3, //边线的宽度，以像素为单位。
-        strokeOpacity: 0.8, //边线透明度，取值范围0 - 1。
-        fillOpacity: 0.6, //填充的透明度，取值范围0 - 1。
-        strokeStyle: 'solid' //边线的样式，solid或dashed。
-    };
-    //实例化鼠标绘制工具
-    var drawingManager = new BMapLib.DrawingManager(me.bdmap, {
-        isOpen: false, //是否开启绘制模式
-        enableDrawingTool: true, //是否显示工具栏
-        drawingToolOptions: {
-            anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
-            offset: new BMap.Size(5, 5), //偏离值
-        },
-        circleOptions: styleOptions, //圆的样式
-        polylineOptions: styleOptions, //线的样式
-        polygonOptions: styleOptions, //多边形的样式
-        rectangleOptions: styleOptions //矩形的样式
-    });
-    //添加鼠标绘制工具监听事件，用于获取绘制结果
-    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
-    clearAll();
-
-};
-function clearAll() {
-    var me = this;
-
-    for (var i = 0; i < me.overlays.length; i++) {
-        me.bdmap.removeOverlay(me.overlays[i]);
+    count_point = 1;
+    var allmap = me.bdmap.getOverlays();
+    var map_length = allmap.length;
+    for (var i = 0; i < map_length; i++) {
+        if (allmap[i].toString() == "[object Marker]") {
+            if (allmap[i].getIcon()) {
+                me.bdmap.removeOverlay(allmap[i]);
+            }
+        }
     }
-    me.overlays.length = 0;
-}
-;
+};
+
+MapControl.prototype.clearLine = function () {
+    var me = this;
+
+    count_line = 1;
+    var allmap = me.bdmap.getOverlays();
+    var map_length = allmap.length;
+    for (var i = 0; i < map_length; i++) {
+        if (allmap[i].toString().indexOf("Polyline") > 0)
+        {//删除折线
+            me.bdmap.removeOverlay(allmap[i]);
+        }
+
+    }
+};
+
+MapControl.prototype.clearPolygon = function () {
+    var me = this;
+
+    count_polygon = 1;
+    var allmap = me.bdmap.getOverlays();
+    var map_length = allmap.length;
+    for (var i = 0; i < map_length; i++) {
+        if (allmap[i].toString().indexOf("Polygon") > 0)
+        {//删除折线
+            me.bdmap.removeOverlay(allmap[i]);
+        }
+
+    }
+};
 
 
 
