@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>地图简介</title>
+    <!--    <script src="lib/login.js"></script>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'
+          integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+    <link rel="stylesheet" href="CSS/MapIntro.css">
+    <script src="lib/Mapintro.js"></script>
+</head>
+<body>
+<header>
+    <h1>欢迎使用携行地图</h1>
+</header>
+
+<nav>
+    <ul class="topnav" id="dropdownClick">
+        <li><a href="index.html">携行地图</a></li>
+        <li><a href="FunctionDesign.html">功能设计</a></li>
+        <li><a href="MapIntro.html">地图简介</a></li>
+        <li><a href="MapAuthor.html">地图作者</a></li>
+
+        <li class="topnav-right"><a href="logon.html">注册</a></li>
+        <li class="topnav-right"><a href="login.html">登陆</a></li>
+    </ul>
+</nav>
+
+<div>
+    <h1>地图简介</h1>
+</div>
+
+<div class="slideshow-container">
+    <div class="content">
+        <div class="mySlides fade">
+            <div class="numbertext">1 / 4</div>
+            <img src="image/1.png" style="width:90%">
+
+        </div>
+
+        <div class="mySlides fade">
+            <div class="numbertext">2 / 4</div>
+            <img src="image/2.png" style="width:90%">
+
+        </div>
+
+        <div class="mySlides fade">
+            <div class="numbertext">3 / 4</div>
+            <img src="image/3.png" style="width:90%">
+
+        </div>
+
+        <div class="mySlides fade">
+            <div class="numbertext">4 / 4</div>
+            <img src="image/4.png" style="width:90%">
+
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+    </div>
+</div>
+    <br>
+
+    <div style="text-align:center">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+    </div>
+
+    <br>
+
+<div class="section">
+    <h1><span>设计思路</span></h1>
+    <p>
+           当前社会有太多地图网站的应用，然而他们功能都过于强大以至于很多功能用户都不知道从哪开始使用，我们网站旨在于通过设计并实现最简单的功能，
+        使得用户可以快速方便的在地图上标记自己的所在位置、标记自己的行走路线、标记特殊区域、计算自己的行走距离、并对路线进行规划，他满足一切
+        对出行的基本需求，而且界面简单易用。
+    </p>
+</div>
+
+<div class="section">
+    <h1><span>技术方案</span></h1>
+    <p>
+           随着 Internet 的快速发展，Web 服务正逐步进入社会的各行各业，为了保证系统以后的质量及运行效率，系统运行必须有一个适当的网络结构。
+        在充分考虑到用户访问等要求，以及系统扩展的需要，我们系统采用 B/S 网络体系结构。由分布在各客户端的浏览器、Web 服务器组成。携行地图
+        基于web平台开发，采用B/S 架构，并采用Postgre SQL 数据库来保存用户的所有数据信息，使用javascirpt、php等语言编程来实现相关功能。
+        它的基础硬件环境为：Windows版本是Windows 10家庭中文版、处理器是Intel(R) Core(TM) i5-7300HQ CPU @ 2.50GHz 2.50 GHz、
+        最小RAM 8.00 GB、64位操作系统。
+    </p>
+</div>
+
+<div class="section">
+    <h1><span>未来展望</span></h1>
+    <p>
+        携行地图当下旨在为大多数人提供简单傻瓜式的导航服务，旨在以更简单清楚的界面完成最常用的功能。在未来，携行地图将继续秉承这一理念，
+        寻找人们最常用的功能，并设计最傻瓜式的界面，使教育经历不足、理解能力差的人，也能够感受到现代地图的魅力，然后应用于自己的生活，
+        让生活更简单，让世界看起来更美丽。
+    </p>
+</div>
+
+
+</body>
+</html>

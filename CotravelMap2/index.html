@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>携行地图</title>
+        <script 
+            type="text/javascript" 
+            src="http://api.map.baidu.com/api?v=2.0&ak=v98wQ4zhuU4AF6ci7gyMerB53oM5yAgB">
+        </script>
+        <!--      
+               <script type="text/javascript" src="//api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>-->
+
+        <!--        加载鼠标绘制工具
+                <script type="text/javascript" src="//api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+                <link rel="stylesheet" href="//api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />-->
+
+
+        <script src="support/jquery-3.4.1.min.js" type="text/javascript"></script>
+        <script src="support/DistanceTool_min.js" type="text/javascript"></script>
+
+        <script src="lib/ProjectionUtils.js" type="text/javascript"></script>
+        <script src="lib/UUID.js" type="text/javascript"></script>
+        <script src="lib/mapControl.js" type="text/javascript"></script>
+        <script src="lib/initmap.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="CSS/index.css">
+        <!--        <script src="lib/index3.js" type="text/javascript"></script>-->
+
+        <!--        <script>
+                    
+                    var bdmap;
+           
+                    function initmap() {
+                        bdmap = new BMap.Map("mymap");
+                        //初始化地图，设置坐标点在哪
+                        map.centerAndZoom(new BMap.Point(113.000139, 28.160198), 4);
+                    }
+        
+        
+                </script>-->
+    </head>
+    <body>
+        <header>
+            <h1>欢迎使用携行地图</h1>
+        </header>
+        <nav>
+            <ul class="topnav" id="dropdownClick">
+                <li><a href="index.html">携行地图</a></li>
+                <li><a href="FunctionDesign.html">功能设计</a></li>
+                <li><a href="MapIntro.html">地图简介</a></li>
+                <li><a href="MapAuthor.html">地图作者</a></li>
+
+                <li class="topnav-right"><a href="logon.html">注册</a></li>
+                <li class="topnav-right"><a href="login.html">登陆</a></li>
+            </ul>
+        </nav>
+
+        <div class="row">
+            <div class="col-2 btn-group">
+                <button class="button" onclick="mapControl._addPoint()">标注点</button>
+                <button class="button">标注线</button>
+                <button class="button">标注面</button>
+                <button class="button" onclick="mapControl._measureDistance()">测距</button>
+                <button class="button" onclick="mapControl._getpath()">路线规划</button>
+
+            </div>
+            <div class="col-9 map" id="viewDiv"></div>
+        </div>
+        <div id="mymap"></div>
+
+        <footer>
+            <input type="text" placeholder="出发地" style="width: 10em" id="startAddress">
+            <input type="text" placeholder="目的地" style="width: 10em" id="endAddress">
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>携行地图</title>
+    <link rel="stylesheet" href="CSS/login.css">
+<!--    <script src="lib/login.js"></script>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'
+          integrity='sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU' crossorigin='anonymous'>
+</head>
+<body>
+<header>
+    <h1>欢迎使用携行地图</h1>
+</header>
+
+<nav>
+    <ul class="topnav" id="dropdownClick">
+        <li><a href="index.html">携行地图</a></li>
+        <li><a href="FunctionDesign.html">功能设计</a></li>
+        <li><a href="MapIntro.html">地图简介</a></li>
+        <li><a href="MapAuthor.html">地图作者</a></li>
+
+        <li class="topnav-right"><a href="logon.html">注册</a></li>
+        <li class="topnav-right"><a href="login.html">登陆</a></li>
+    </ul>
+</nav>
+<br><br>
+
+<main id="form">
+    <section style="display: inline;" id="ma">
+        <i class='far fa-user-circle' style='font-size:84px;padding: 5px; color: #27a5df'></i>
+        <h1> 登陆 </h1><hr><br>
+
+        用户
+        <input id="un" placeholder="username..." type="text" /><br><br>
+
+        密码
+        <input type="password" id="psw" placeholder="password..." /><br><br>
+
+        <i class="far fa-check-circle" style="font-size: 20px;color: #27a5df" onclick="uc()" id="1"></i>
+
+        <i class="far fa-circle" style="font-size: 20px;display: none;color: #27a5df" onclick="ch()" id="2"></i> 记住密码<br><br>
+
+        <button onclick="login()">
+            <a href="index.html">登陆</a>
+            <i class="fas fa-sign-in-alt"></i>
+        </button>
+    </section>
+
+<!--    <section id="out" style="display: none;">-->
+<!--        <i class='far fa-user-circle' style='font-size:84px;padding: 5px; color: #27a5df'></i>-->
+<!--        <h1> User Info </h1><hr>-->
+<!--        <p id="info"></p><br />-->
+<!--        <button onclick="logout()">Logout-->
+<!--            <i class="fas fa-power-off"></i>-->
+<!--        </button>-->
+<!--    </section>-->
+</main>
+
+<br><br>
+</body>
+</html>
